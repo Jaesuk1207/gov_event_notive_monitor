@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}사업 공고 모니터링{% endblock %}
+
+{% block content %}
+
+{% include "partials/nav_tabs.html" %}
+
+<h1 class="title">사업 공고 모니터링</h1>
+<p class="muted">
+  최근 수집(KST): {{ stats.generated_at or "-" }} | 저장 임계값: {{ stats.file_threshold if stats.file_threshold is not none else "-" }}
+</p>
+
+<div style="display:flex; gap:10px; align-items:center; margin:8px 0 18px;">
+  <form method="post" action="{{ url_for('refresh_all') }}">
+    <button type="submit" {% if stats.is_refreshing %}disabled{% endif %}>
+      {% if stats.is_refreshing %}수집 중…{% else %}즉시 새로고침{% endif %}
+    </button>
+  </form>
+  <a class="ghost" href="{{ url_for('api_notices') }}" target="_blank" rel="noopener">/api/notices</a>
+</div>
+
+{# ▶︎ 검색 바: 교육/행사 페이지와 동일한 레이아웃로 #}
+<form method="get" action="{{ url_for('index') }}" class="filters">
+  <label class="grow">
+    제목/기관/메타 검색
+    <input type="text" name="q" placeholder="예: 의료, 보건복지부, 임상" value="{{ params.q }}">
+  </label>
+  {# 화면표시 최소점수는 UI에서 감추되, 현재 값은 유지되도록 hidden 으로 넘김 #}
+  <input type="hidden" name="screen_min" value="{{ params.screen_min if params.screen_min is not none else 0 }}">
+  <button type="submit">적용</button>
+  <a class="ghost" href="{{ url_for('index') }}">초기화</a>
+</form>
+
+{# ▶︎ 요약 카드: 총 수집 / 화면 표시 / 수집 상태 (평균 점수 카드 제거) #}
+<div class="summary">
+  <div>총 수집 <b>{{ stats.count_total }}</b>건</div>
+  <div>화면 표시 <b>{{ stats.count_shown }}</b>건</div>
+  <div>
+    {% if stats.is_refreshing %}수집 상태: <b>진행 중</b>{% else %}수집 상태: <b>대기</b>{% endif %}
+  </div>
+</div>
+
+{# ── 출처별 섹션 ── #}
+{% for g in groups %}
+{% set src_slug = (g.source|lower
+                    |replace(' ', '-')
+                    |replace('(', '')
+                    |replace(')', '')
+                    |replace('/', '')
+                    |replace('.', '')
+                    |replace('&', '')) %}
+<details class="section" {% if loop.index0 == 0 %}open{% endif %}>
+  <summary>
+    <span class="src src-{{ src_slug }}">{{ g.source }}</span>
+    <span class="sum-title">{{ g.source }} 공고</span>
+    <span class="sum-meta">{{ g.count }}건</span>
+  </summary>
+
+  <table class="table notices-table">
+    <colgroup>
+      <col style="width:48%;">   {# 공고명 – 넓게 #}
+      <col style="width:22%;">   {# 소관/전문기관 #}
+      <col style="width:15%;">   {# 공고일(한 줄 고정) #}
+      <col style="width:15%;">   {# 접수기간 #}
+      {# 점수/사유는 CSS에서 display:none 처리됨 #}
+    </colgroup>
+    <thead>
+      <tr>
+        <th>공고명</th>
+        <th>소관/전문기관</th>
+        <th>공고일</th>
+        <th>접수기간</th>
+        <th>점수</th>
+        <th>사유</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for n in g['items'] %}
+      <tr>
+        <td class="title-cell">
+          <span class="src src-{{ src_slug }}">{{ g.source }}</span>
+          <a href="{{ n.link }}" target="_blank" rel="noopener">
+            {{ n.meta["공고명"] or n.title }}
+          </a>
+        </td>
+        <td class="org-cell">{{ n.institution }}</td>
+        <td class="date-cell">{{ n.meta["공고일자"] or n.date }}</td>
+        <td class="date-cell">{{ n.meta["접수기간"] or "-" }}</td>
+        <td class="score">{{ n.score }}</td>
+        <td class="reasons">
+          {% set full_reasons = ", ".join(n.reasons) %}
+          {% for r in n.reasons[:2] %}
+            <span class="chip" title="{{ full_reasons }}">{{ r }}</span>
+          {% endfor %}
+          {% if n.reasons|length > 2 %}
+            <span class="chip more" title="{{ full_reasons }}">+{{ n.reasons|length - 2 }}</span>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</details>
+{% endfor %}
+
+{% if not groups %}
+  <p class="empty">표시할 항목이 없습니다.</p>
+{% endif %}
+
+{% endblock %}

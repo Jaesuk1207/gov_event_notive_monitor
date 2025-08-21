@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <title>{% block title %}사업 공고 모니터링{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  {% if stats and stats.is_refreshing %}
+    <!-- 수집 중일 때 5초마다 자동 새로고침 -->
+    <meta http-equiv="refresh" content="5" />
+  {% endif %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<body>
+  {% if stats and stats.is_refreshing %}
+  <div class="refreshing-banner" role="status" aria-live="polite">
+    <div class="spinner" aria-hidden="true"></div>
+    <span>지금 데이터 수집 중입니다… 잠시만 기다려 주세요.</span>
+  </div>
+  {% endif %}
+
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>

@@ -1,0 +1,7 @@
+
+TRY post->https://www.kiat.or.kr/front/board/boardContentsViewPage.do params=['lang', 'MenuIdForMobile', 'board_id', 'MenuId', 'contents_id']... (total 5)
+TRY post->https://www.kiat.or.kr/front/board/boardContentsViewPage.do params=['lang', 'MenuIdForMobile', 'board_id', 'MenuId', 'contents_id']... (total 5)
+TRY post->https://www.kiat.or.kr/front/board/boardContentsViewPage.do params=['lang', 'MenuIdForMobile', 'board_id', 'MenuId', 'contents_id']... (total 5)
+TRY post->https://www.kiat.or.kr/front/board/boardContentsViewPage.do params=['lang', 'MenuIdForMobile', 'board_id', 'MenuId', 'contents_id']... (total 5)
+TRY post->https://www.kiat.or.kr/front/board/boardContentsViewPage.do params=['lang', 'MenuIdForMobile', 'board_id', 'MenuId', 'contents_id']... (total 5)
+TRY post->https://www.kiat.or.kr/front/board/boardContentsViewPage.do params=['lang', 'MenuIdForMobile', 'board_id', 'MenuId', 'contents_id']... (total 5)

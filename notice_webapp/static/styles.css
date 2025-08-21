@@ -1,0 +1,272 @@
+/* ===== Theme / Base ===== */
+:root{
+  --bg:#0b1020;
+  --panel:#11172b;
+  --muted:#9aa4b2;
+  --fg:#e8eef8;
+  --acc:#4f8cff;
+  --acc-contrast:#ffffff;
+  --ok:#22c55e;
+  --chip:#2a3350;
+  --line:#1a2341;
+  --input:#0d1326;
+  --input-border:#24304c;
+}
+
+*{ box-sizing:border-box; }
+html, body { height:100%; }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--fg);
+  font:14px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+.container{
+  max-width:1100px;
+  margin:32px auto;
+  padding:0 16px;
+}
+
+/* ===== Headings / Text ===== */
+.title{ font-size:24px; margin:0 0 4px; }
+.muted{ color:var(--muted); margin:0 0 24px; }
+
+/* ===== Filters form ===== */
+.filters{
+  display:flex;
+  gap:12px;
+  align-items:end;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.filters label{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  background:var(--panel);
+  padding:12px;
+  border-radius:12px;
+  min-width:220px;
+}
+.filters .grow{ flex:1; min-width:280px; }
+
+input[type="text"],
+input[type="number"]{
+  background:var(--input);
+  border:1px solid var(--input-border);
+  color:var(--fg);
+  padding:10px;
+  border-radius:8px;
+  outline:none;
+}
+input[type="text"]:focus,
+input[type="number"]:focus{
+  border-color:var(--acc);
+  box-shadow:0 0 0 3px rgba(79,140,255,.15);
+}
+
+/* Buttons & links */
+button{
+  background:var(--acc);
+  border:none;
+  color:var(--acc-contrast);
+  padding:12px 16px;
+  border-radius:10px;
+  cursor:pointer;
+  transition:filter .15s ease;
+}
+button:hover{ filter:brightness(1.05); }
+button:disabled{
+  opacity:.65;
+  cursor:not-allowed;
+}
+
+a.ghost{
+  display:inline-block;
+  background:transparent;
+  color:var(--muted);
+  border:1px solid #2b375a;
+  padding:12px 16px;
+  border-radius:10px;
+  text-decoration:none;
+  transition:color .15s ease, border-color .15s ease;
+}
+a.ghost:hover{
+  color:#cfe2ff;
+  border-color:var(--acc);
+}
+
+/* ===== Summary cards ===== */
+.summary{
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+  gap:12px;
+  margin:12px 0 16px;
+}
+.summary > div{
+  background:var(--panel);
+  padding:12px;
+  border-radius:12px;
+}
+@media (max-width: 900px){
+  .summary{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 520px){
+  .summary{ grid-template-columns:1fr; }
+}
+
+/* ===== Table ===== */
+.table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0 8px;
+}
+.table thead th{
+  font-weight:600;
+  color:var(--muted);
+  text-align:left;
+  padding:8px 10px;
+}
+.table tbody tr{ background:var(--panel); }
+.table tbody td{
+  padding:14px 10px;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+}
+.table tbody tr td:first-child{
+  border-left:1px solid var(--line);
+  border-top-left-radius:12px;
+  border-bottom-left-radius:12px;
+}
+.table tbody tr td:last-child{
+  border-right:1px solid var(--line);
+  border-top-right-radius:12px;
+  border-bottom-right-radius:12px;
+}
+.title-cell a{
+  color:#cfe2ff;
+  text-decoration:none;
+}
+.title-cell a:hover{
+  color:#ffffff;
+  text-decoration:underline;
+}
+.score{ font-weight:700; }
+.reasons .chip{
+  display:inline-block;
+  background:var(--chip);
+  color:#c9d4e5;
+  border:1px solid #324069;
+  border-radius:999px;
+  padding:4px 8px;
+  margin:2px 4px 0 0;
+  font-size:12px;
+}
+.empty{
+  text-align:center;
+  color:var(--muted);
+  padding:40px;
+}
+.api-link{ margin-top:18px; }
+
+/* ===== Refreshing banner (top sticky) ===== */
+.refreshing-banner{
+  position:sticky; top:0; z-index:1000;
+  display:flex; align-items:center; gap:.6rem;
+  padding:.7rem 1rem;
+  background:#0b5cff;
+  color:#fff;
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+}
+.spinner{
+  width:16px; height:16px;
+  border:2px solid rgba(255,255,255,.5);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+/* 출처 라벨 */
+.src{
+  display:inline-block;
+  font-size:11px;
+  line-height:1;
+  padding:4px 6px;
+  margin-right:8px;
+  border-radius:6px;
+  border:1px solid #324069;
+  background: var(--chip);
+  color:#dbe6ff;
+  vertical-align:middle;
+}
+
+/* 소스별 포인트 컬러(원하면 조정) */
+.src-iris  { background:#243a6b; color:#cfe2ff; }
+.src-khidi { background:#2b3f2f; color:#d5f7e1; }
+.src-kiat  { background:#4a2d33; color:#ffd9df; }
+.src-keit  { background:#2f3447; color:#e0e7ff; }
+.src-other { background:#3b3b3b; color:#f0f0f0; }
+
+/* 섹션(accordion) */
+.section { margin: 10px 0 14px; border-radius: 12px; overflow: hidden; }
+.section > summary {
+  list-style: none; cursor: pointer; user-select: none;
+  background: var(--panel); padding: 12px 14px; display: flex; align-items: center; gap: 10px;
+  border: 1px solid #1a2341; border-radius: 12px;
+}
+.section[open] > summary { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.section > summary::-webkit-details-marker { display:none; }
+.sum-title { font-weight:600; }
+.sum-meta { margin-left: auto; color: var(--muted); }
+
+/* 출처 라벨 색상 */
+.src { display:inline-block; padding:2px 8px; font-size:12px; border-radius:999px; border:1px solid #324069; background:var(--chip); color:#c9d4e5; }
+.src-iris { background:#4f8cff; color:#0b1020; }
+.src-keit { background:#f59e0b; color:#0b1020; }
+.src-kiat { background:#14b8a6; color:#0b1020; }
+.src-khidi { background:#22c55e; color:#0b1020; }
+
+/* 표 전체를 고정 레이아웃로 – colgroup 폭을 제대로 반영 */
+.table { table-layout: fixed; }
+
+/* 날짜 칼럼은 줄바꿈 금지(항상 한 줄) */
+.events-table .date-cell,
+.events-table th:first-child {
+  white-space: nowrap;
+}
+
+/* 제목/기관은 자연스러운 줄바꿈 허용(말줄임 X) */
+.events-table .title-cell,
+.events-table .org-cell {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+}
+
+/* 한글 단어 중간 분해 최소화 */
+.table { word-break: keep-all; }
+
+
+/* 사업공고 표: 공고일만 한 줄 (우선순위 높임) *//* 이미 숨긴 '점수/사유'는 그대로… */
+.table.notices-table th:nth-child(5),
+.table.notices-table td:nth-child(5),
+.table.notices-table th:nth-child(6),
+.table.notices-table td:nth-child(6) { display:none; }
+
+/* 고정 레이아웃 + 보이는 4개 칼럼 폭 재분배 */
+.table.notices-table { table-layout: fixed; }
+
+/* 1) 제목  2) 소관/전문기관  3) 공고일  4) 접수기간  */
+.table.notices-table th:nth-child(1),
+.table.notices-table td:nth-child(1) { width: 60%; }   /* 제목 크게 */
+.table.notices-table th:nth-child(2),
+.table.notices-table td:nth-child(2) { width: 18%; }   /* 기관 */
+.table.notices-table th:nth-child(3),
+.table.notices-table td:nth-child(3) { width: 12%; white-space: nowrap; } /* 공고일 한 줄 */
+.table.notices-table th:nth-child(4),
+.table.notices-table td:nth-child(4) { width: 20%; }   /* 접수기간 */
+

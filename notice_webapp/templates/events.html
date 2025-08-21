@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}교육 및 행사 안내{% endblock %}
+
+{% block content %}
+
+{% include "partials/nav_tabs.html" %}
+
+<h1 class="title">교육 및 행사 안내</h1>
+<p class="muted">
+  최근 수집(KST): {{ stats.generated_at or "-" }} | 총 {{ stats.count }}건
+</p>
+
+<div style="display:flex; gap:10px; align-items:center; margin:8px 0 18px;">
+  <form method="post" action="{{ url_for('refresh_events') }}">
+    <button type="submit" {% if stats.is_refreshing %}disabled{% endif %}>
+      {% if stats.is_refreshing %}수집 중…{% else %}이 페이지만 새로고침{% endif %}
+    </button>
+  </form>
+  <a class="ghost" href="{{ url_for('api_events') }}" target="_blank" rel="noopener">/api/events</a>
+</div>
+
+<form method="get" action="{{ url_for('edu') }}" class="filters">
+  <label class="grow">
+    제목/기관/메타 검색
+    <input type="text" name="q" placeholder="예: 교육, GMP, 인증, 세미나" value="{{ params.q or '' }}">
+  </label>
+  <button type="submit">적용</button>
+  <a class="ghost" href="{{ url_for('edu') }}">초기화</a>
+</form>
+
+<div class="summary">
+  <div>총 수집 <b>{{ stats.count }}</b>건</div>
+  <div>화면 표시 <b>{{ items|length }}</b>건</div>
+  <div>{% if stats.is_refreshing %}수집 상태: <b>진행 중</b>{% else %}수집 상태: <b>대기</b>{% endif %}</div>
+</div>
+
+<table class="table events-table">
+  <!-- 폭을 안정적으로 고정 -->
+  <colgroup>
+    <col style="width: 110px;">  <!-- 등록일: 한 줄 고정 -->
+    <col>                        <!-- 제목: 가변 -->
+    <col style="width: 280px;">  <!-- 출처/기관 -->
+  </colgroup>
+  <thead>
+    <tr>
+      <th>등록일</th>
+      <th>제목</th>
+      <th>출처/기관</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for it in items %}
+    {% set origin = ((it.meta or {}).get('원문링크') or '')|trim %}
+    {% set use_origin = origin and origin not in ['-','–','—','없음','미정','n/a','N/A','null','NULL'] and ('http://' in origin or 'https://' in origin) %}
+    {% set href = origin if use_origin else it.link %}
+
+    <tr>
+      <td class="date-cell">{{ it.date }}</td>
+      <td class="title-cell">
+        <a href="{{ href }}" target="_blank" rel="noopener">
+          {{ it.title }}
+        </a>
+      </td>
+      <td class="org-cell">{{ it.institution or "-" }}</td>
+    </tr>
+  {% else %}
+    <tr><td colspan="3" class="muted" style="text-align:center;">표시할 항목이 없습니다.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

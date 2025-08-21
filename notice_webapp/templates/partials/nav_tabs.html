@@ -1,0 +1,15 @@
+{# templates/partials/nav_tabs.html #}
+<nav style="display:flex; gap:.5rem; margin: 6px 0 14px;">
+  <a href="{{ url_for('index') }}"
+     style="padding:8px 12px; border-radius:8px; text-decoration:none;
+            background: {% if request.path == '/' %}#334155{% else %}#1e293b{% endif %};
+            color:#e6eefb; font-weight:{% if request.path == '/' %}600{% else %}500{% endif %};">
+    사업공고
+  </a>
+  <a href="{{ url_for('edu') }}"
+     style="padding:8px 12px; border-radius:8px; text-decoration:none;
+            background: {% if request.path.startswith('/edu') %}#334155{% else %}#1e293b{% endif %};
+            color:#e6eefb; font-weight:{% if request.path.startswith('/edu') %}600{% else %}500{% endif %};">
+    교육 및 행사 안내
+  </a>
+</nav>
